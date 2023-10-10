@@ -66,9 +66,7 @@ num = 10
 AUC = np.zeros(shape=(num, cv_num))
 AUPR = np.zeros(shape=(num, cv_num))
 
-# ppi_name = ['CPDB', 'STRING', 'PathNet']
-# ppi_type = 'STRING'
-# special_cancer = 'BRCA'
+
 cancer = args.cancer
 if cancer in ['BRCA', 'LIHC']:
     data = torch.load('./data/data_paper/CPDB_' + cancer + '_cancer.pkl', map_location=device)
