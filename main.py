@@ -69,9 +69,9 @@ AUPR = np.zeros(shape=(num, cv_num))
 
 cancer = args.cancer
 if cancer in ['BRCA', 'LIHC']:
-    data = torch.load('./data/data_paper/CPDB_' + cancer + '_cancer.pkl', map_location=device)
+    data = torch.load('./data/CPDB_' + cancer + '_cancer.pkl', map_location=device)
 else:
-    data = torch.load('./data/data_paper/' + cancer + '_pan_cancer.pkl', map_location=device)
+    data = torch.load('./data/' + cancer + '_pan_cancer.pkl', map_location=device)
 k_sets = data.k_sets
 time_start = time.time()
 for i in range(num):
