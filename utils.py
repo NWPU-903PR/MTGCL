@@ -71,11 +71,16 @@ def parse_args():
                         default=0.7,
                         type=float
                         )
-    parser.add_argument('-cv', '--cv_runs', help='Number of cross validation runs',
+    parser.add_argument('-cv', '--cv_runs', help='number of folds for cross-validation',
                     dest='cv_runs',
                     default=5,
                     type=int
                     )
+    parser.add_argument('-num', '--cv_runs_num', help='number of iterations for cross-validation',
+                        dest='num',
+                        default=10,
+                        type=int
+                        )
     args = parser.parse_args()
     return args
 

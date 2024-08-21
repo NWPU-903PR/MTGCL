@@ -85,7 +85,7 @@ torch.cuda.manual_seed_all(seed)
 
 EPOCH = args.epochs
 cv_num = args.cv_runs
-num = 10
+num = args.num
 
 AUC = np.zeros(shape=(num, cv_num))
 AUPR = np.zeros(shape=(num, cv_num))
