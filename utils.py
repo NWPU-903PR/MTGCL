@@ -1,10 +1,12 @@
 import os, argparse
+from scipy.stats import ttest_ind
 
+from sklearn.metrics import recall_score, precision_score, f1_score, matthews_corrcoef
 def parse_args():
     parser = argparse.ArgumentParser(description='Train model with cross-validation and save model to file')
     parser.add_argument('-cancer', '--cancer', dest='cancer', type=str, default='CPDB')
     parser.add_argument('-model', '--model', dest='model', type=str, default='MTGCL')
-    parser.add_argument('-device', '--device', dest='device', type=str, default='cuda:2')
+    parser.add_argument('-device', '--device', dest='device', type=str, default='cuda:0')
     parser.add_argument('-sd', '--seed', dest='seed', type=int, default=12345)
     parser.add_argument('-e', '--epochs', help='Number of Epochs',
                         dest='epochs',
