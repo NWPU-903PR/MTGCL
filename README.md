@@ -24,9 +24,9 @@ All implementations of MTGCL and the GNN-based baselines were based on PyTorch a
 The scripts of `main.py` can reproduce the comparison results, which can be done by the following commands, taking the CPDB network as an example, the hyperparameters corresponding to each method can be set in the utils script:
 
 ``` 
-python main.py -cancer "CPDB" -model "MTGCL" -e 1900 -lr 0.001 -hd [300,100] -dropout 0.5 - dropout_edge 0.5 -pe1 0.1 -pe2 0.3 -pf1 0.1 -pf2 0.5 -t 0.5 -lamuta 0.7 
+python main.py -cancer "CPDB" -model "MTGCL" -e 1900 -lr 0.001 -hd [300,100] -dropout 0.5 - dropout_edge 0.5 -pe1 0.1 -pe2 0.3 -pf1 0.1 -pf2 0.5 -t 0.5 -lamuta 0.7 -cv 5 -num 10
 ```
-
+The parameter "-cancer" can take a range of values including pan-cancer "CPDB", "STRING", "PathNet", and specific-type cancers such as "BRCA", "LIHC", "COAD", "PRAD", "UCEC". The comparison methods and baseline methods can be changed by modifying the parameter "-model", and adjusting the corresponding hyperparameters according to  Supplementary A5. The datasets  are also provided in the "./data/data_paper" folder.
 
 
 
