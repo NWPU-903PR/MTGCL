@@ -12,7 +12,7 @@ import os
 from utils import parse_args, create_train_dir, create_model_dir, write_hyper_params
 import torch.nn as nn
 from torch_geometric.utils import dropout_adj, dropout_adj, negative_sampling, remove_self_loops, add_self_loops
-
+from torch.optim.lr_scheduler import StepLR
 
 def train(data, train_mask, p_train, used_model):
 
@@ -51,7 +51,7 @@ def train(data, train_mask, p_train, used_model):
 def test(data, test_mask, used_model):
     model.eval()
     with torch.no_grad():
-        if used_model == 'MTCGN':
+        if used_model == 'MTGCN':
             pre, r_loss, c1, c2 = model.MTGCN(data, args.dropout_edge, args.dropout, pb, E)
         else:
             pre = model(data)
@@ -91,7 +91,6 @@ AUC = np.zeros(shape=(num, cv_num))
 AUPR = np.zeros(shape=(num, cv_num))
 
 # ppi_name = ['CPDB', 'STRING', 'PathNet']
-# ppi_type = 'STRING'
 
 cancer = args.cancer
 if cancer in ['BRCA', 'LIHC', 'COAD', 'PRAD', 'UCEC']:
@@ -99,6 +98,7 @@ if cancer in ['BRCA', 'LIHC', 'COAD', 'PRAD', 'UCEC']:
 else:
     data = torch.load('./data/data_paper/' + cancer + '_pan_cancer.pkl', map_location=device)
 k_sets = data.k_sets
+
 
 if args.model == 'MTGCN':
     pb, _ = remove_self_loops(data.edge_list)
@@ -112,6 +112,9 @@ for i in range(num):
 
     for cv_run in range(cv_num):
         print(cv_run)
+        epoch_list = []
+        epoch_list_auc = []
+        pre_all = []
         p_train, p_test, tr_mask, te_mask = k_sets[i][cv_run]
         cv_path = create_model_dir(num_path, cv_run)
         model = SGL(data, model_used=args.model, input_dim=data.x.shape[1], hidden_dim=args.hidden_dims[0], output_dim=args.hidden_dims[1],
@@ -123,11 +126,16 @@ for i in range(num):
             print(epoch)
             train(data, tr_mask, p_train, args.model)
 
-        torch.save(model, cv_path + 'model' + '_' + str(cv_run) + '.pkl')
+        #torch.save(model, cv_path + 'model' + '_' + str(cv_run) + '.pkl')
         auc, aupr, x = test(data, te_mask, args.model)
+        # epoch_list.append([epoch + 1, aupr])
+        # epoch_list_auc.append([epoch + 1, auc])
+        # epoch_list.append(aupr)
+        # epoch_list_auc.append(auc)
         print(f' test auc {auc}, test aupr {aupr}')
         AUC[i][cv_run] = auc
         AUPR[i][cv_run] = aupr
+
         pred = torch.sigmoid(x).cpu().detach().numpy()
         pd.DataFrame(pred).to_csv(cv_path + 'predict' + '_' + str(cv_run) + '.txt')
 

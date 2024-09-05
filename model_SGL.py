@@ -26,7 +26,7 @@ class SGL(torch.nn.Module):
         self.pf2 = pf2
         self.model = model_used
 
-        if self.model=='ChebConv':
+        if self.model=='ChebConv' or self.model == 'EMOGI':
             self.conv1 = ChebConv(input_dim, hidden_dim, K=2, normalization='sym')
             self.conv2 = ChebConv(hidden_dim, output_dim, K=2, normalization='sym')
             self.conv3 = ChebConv(output_dim, 1, K=2, normalization='sym')
@@ -79,27 +79,17 @@ class SGL(torch.nn.Module):
             self.c2 = torch.nn.Parameter(torch.Tensor([0.5]))
 
 
-    def forward(self, data, edge_weight: OptTensor = None):
+    def forward(self, data):
 
-        if self.model == 'ChebConv':
-
-            pre, _ = self.gcn(data, self.drop_edge_p, self.drop_p)
-
-        elif self.model == 'GAT':
-
-            pre, _ = self.gcn(data, self.drop_edge_p, self.drop_p)
-
-        elif self.model == 'GCN':
-
-            pre, _ = self.gcn(data, self.drop_edge_p, self.drop_p)
-
-        elif self.model == 'MTGCL':
+        if self.model == 'MTGCL':
 
             pre, _ = self.gcn_mlp(data, self.drop_edge_p, self.drop_p)
 
         elif self.model == 'MLP':
 
             pre, _ = self.mlp(data, self.drop_edge_p, self.drop_p)
+        else:
+            pre, _ = self.gcn(data, self.drop_edge_p, self.drop_p)
 
         return pre
     def sgcl_loss(self, data, train_mask, p_train):
